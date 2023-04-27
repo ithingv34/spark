@@ -221,3 +221,30 @@ spark.sql('SELECT pickup_datetime FROM trip_data LIMIT 5').show()
 
 ---
 ### [데이터 분석 프로젝트]()
+
+**택시 데이터 분석**
+- 2021년 1월 ~ 7월까지 yello taxi data 다운로드
+
+- parquet 파일 -> csv 파일로 변환
+```python
+import os
+import multiprocessing
+import pandas as pd
+
+
+dir_path = "/home/ithingvv34/data-engineering/spark/trips"
+
+def convert_parquet_to_csv(filename):
+    if filename.endswith(".parquet"):
+        df = pd.read_parquet(os.path.join(dir_path, filename))
+        df.to_csv(os.path.join(dir_path, filename.replace('.parquet', '.csv')))
+
+parquet_files = [f for f in os.listdir(dir_path) if f.endswith('.parquet')]
+
+with multiprocessing.Pool() as pool:
+    pool.map(convert_parquet_to_csv, parquet_files)
+```
+
+<img src="./../image/33.png">
+
+[실습 노트북](./taxi-analysis.ipynb)
